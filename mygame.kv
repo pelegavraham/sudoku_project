@@ -1,0 +1,161 @@
+WindowManager:
+    MainWindow:
+    SelectionWindow:
+
+
+<MainWindow>:
+    id: main
+    name: "main"
+
+    canvas.before:
+        Color:
+            rgba:(0.19,0.19,0.19,1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    GridLayout:
+        cols: 1
+        spacing: 5
+        row_default_height:600
+        row_force_default: True
+
+        Image:
+            source: "images/main_background.jpg"
+        GridLayout:
+            cols: 3
+            spacing: 5
+            padding: 4
+            row_default_height:62
+            row_force_default: True
+            Button:
+                text: "Recommends"
+                on_release:
+                    root.show_popup_introductions()
+
+            Button:
+                name: "main_to_selection"
+                background_normal : "images/tap_play.png"
+                on_release:
+                    app.root.current="selection"
+
+            Button:
+                text: "About"
+                on_release:
+                    root.show_popup_about()
+
+
+<SelectionWindow>:
+    id: selection
+    name: "selection"
+
+    canvas.before:
+        Color:
+            rgba:(0.19,0.19,0.19,1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    GridLayout:
+        cols: 1
+        size: root.width, root.height
+        row_default_height: 210
+        row_force_default: True
+
+        GridLayout:
+            cols: 1
+            spacing: 5
+            padding: 5
+
+            Image:
+                source: "images/title.png"
+
+            GridLayout:
+                cols: 1
+                size: root.width, root.height
+                row_default_height: 540
+                row_force_default: True
+
+                FileChooserListView:
+                    id: filechooser
+                    on_selection: root.selected(filechooser.selection)
+
+<GameWindow>:
+    id: game
+    name: "game"
+
+    canvas.before:
+        Color:
+            rgba:(0.19,0.19,0.19,1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+
+<Cell>:
+    num: num
+    id: num
+    halign: "center"
+    valign: "middle"
+    cursor_color: [0, 0, 0, 0]
+    font_size: 0.6 * self.width
+    multiline: False
+    on_text:
+        root.update_num()
+
+
+<SolveBtnGrid>:
+    txt: txt
+
+    cols : 3
+    spacing : 50
+    padding : 22
+    row_default_height : 65
+    row_force_default : True
+
+    AnchorLayout:
+        anchor_x: 'left'
+        GridLayout:
+            cols: 2
+            anchor_x: 'left'
+            ToggleButton:
+                text:"Enter\nsolve\nmode"
+                group: "solve_mode"
+                halign: "center"
+                valign: "middle"
+                color:(1,1,1,1)
+                width: 70
+                size_hint_x: None
+                on_press:
+                    root.enter_solve_mode()
+            ToggleButton:
+                text:"Exit\nsolve\nmode"
+                group: "solve_mode"
+                halign: "center"
+                valign: "middle"
+                color:(1,1,1,1)
+                width: 70
+                size_hint_x: None
+                on_press:
+                    root.exit_solve_mode()
+
+    Label:
+        id: txt
+        text: "   In solve mode any field you\n   touch explore the right number"
+        valign: "middle"
+        halign: "left"
+        font_size: '17sp'
+        bold: True
+        color:(0.7,0.7,0.7,1)
+
+    AnchorLayout:
+        anchor_x: 'right'
+        Button:
+            width: 70
+            text:"End\ngame"
+            halign: "center"
+            valign: "middle"
+            color:(1,1,1,1)
+            size_hint_x: None
+            on_release:
+                app.get_running_app().stop()
